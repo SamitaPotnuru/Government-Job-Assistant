@@ -1,0 +1,2272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>🇮🇳 Government Job Assistant - AI Voice Agent & Easy Job Apply</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AI-powered voice assistant to discover and apply for Indian government schemes. Supports Hindi and 15+ regional languages."
+    />
+    <meta name="theme-color" content="#059669" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600&family=Noto+Sans+Tamil:wght@400;500;600&family=Noto+Sans+Telugu:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">🇮🇳</div>
+          <div class="logo-text">
+            <h1 data-i18n="appTitle">Govt Job Assistant</h1>
+            <span data-i18n="appSubtitle"
+              >AI-Powered Voice Agent & Easy Job Apply</span
+            >
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" onclick="openShortcuts()">
+            <span>⌨️</span> <span data-i18n="shortcuts">Shortcuts</span>
+          </button>
+          <button class="header-btn" onclick="downloadProfile()">
+            <span>📥</span> <span data-i18n="export">Export</span>
+          </button>
+          <!-- Language Icon Button -->
+          <div style="position: relative">
+            <button
+              class="lang-icon-btn"
+              onclick="toggleLangDropdown()"
+              title="Change Language"
+            >
+              <span>🌐</span>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+              <div
+                class="lang-option active"
+                data-lang="en"
+                onclick="changeUILanguage('en')"
+              >
+                <span class="lang-option-flag">🇬🇧</span> English
+              </div>
+              <div
+                class="lang-option"
+                data-lang="hi"
+                onclick="changeUILanguage('hi')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> हिंदी (Hindi)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="ta"
+                onclick="changeUILanguage('ta')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> தமிழ் (Tamil)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="te"
+                onclick="changeUILanguage('te')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> తెలుగు (Telugu)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="bn"
+                onclick="changeUILanguage('bn')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> বাংলা (Bengali)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="mr"
+                onclick="changeUILanguage('mr')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> मराठी (Marathi)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="gu"
+                onclick="changeUILanguage('gu')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> ગુજરાતી (Gujarati)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="kn"
+                onclick="changeUILanguage('kn')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> ಕನ್ನಡ (Kannada)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="ml"
+                onclick="changeUILanguage('ml')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> മലയാളം (Malayalam)
+              </div>
+              <div
+                class="lang-option"
+                data-lang="pa"
+                onclick="changeUILanguage('pa')"
+              >
+                <span class="lang-option-flag">🇮🇳</span> ਪੰਜਾਬੀ (Punjabi)
+              </div>
+            </div>
+          </div>
+          <button
+            class="theme-toggle"
+            onclick="toggleTheme()"
+            title="Toggle theme"
+          >
+            <span id="themeIcon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+      <!-- Login Bar -->
+      <div class="login-bar">
+        <span style="font-size: 13px; color: var(--text-muted)"
+          >👤 <span data-i18n="quickLogin">Quick Login:</span></span
+        >
+        <input
+          type="text"
+          id="loginName"
+          class="login-input"
+          data-i18n-placeholder="enterName"
+          placeholder="Enter your name to personalize"
+        />
+        <button
+          class="btn btn-primary"
+          onclick="applyLogin()"
+          style="padding: 10px 18px"
+          data-i18n="enter"
+        >
+          Enter
+        </button>
+        <span id="loginStatus" class="login-status"></span>
+      </div>
+
+      <div class="main-layout">
+        <!-- Main Column -->
+        <div class="main-column">
+          <!-- State Machine Visualization -->
+          <div class="state-machine">
+            <div class="state-steps">
+              <div class="state-step" id="step-idle">
+                <span>1</span>
+                <span class="state-label" data-i18n="stateReady">Ready</span>
+              </div>
+              <div class="state-step" id="step-plan">
+                <span>2</span>
+                <span class="state-label" data-i18n="statePlanning"
+                  >Planning</span
+                >
+              </div>
+              <div class="state-step" id="step-retrieve">
+                <span>3</span>
+                <span class="state-label" data-i18n="stateSearching"
+                  >Searching</span
+                >
+              </div>
+              <div class="state-step" id="step-execute">
+                <span>4</span>
+                <span class="state-label" data-i18n="stateMatching"
+                  >Matching</span
+                >
+              </div>
+              <div class="state-step" id="step-eval">
+                <span>5</span>
+                <span class="state-label" data-i18n="stateComplete"
+                  >Complete</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Voice Assistant Card -->
+          <section class="card voice-section">
+            <div class="card-header">
+              <div class="card-icon card-icon-primary">🎤</div>
+              <div>
+                <h2 class="card-title" data-i18n="voiceAssistant">
+                  Voice Scheme Assistant
+                </h2>
+                <p class="card-subtitle" data-i18n="voiceSubtitle">
+                  Speak or type to find eligible government schemes
+                </p>
+              </div>
+            </div>
+
+            <!-- Waveform Visualizer -->
+            <div class="waveform-container" id="waveform"></div>
+
+            <!-- Voice Controls -->
+            <div class="voice-controls">
+              <button
+                id="recordBtn"
+                class="btn btn-primary"
+                onclick="toggleVoiceAgent()"
+              >
+                <span>🎙️</span>
+                <span data-i18n="startAssistant">Start Assistant</span>
+              </button>
+              <button
+                id="speakResponseBtn"
+                class="btn btn-secondary"
+                onclick="speakCurrentResponse()"
+                disabled
+              >
+                <span>🔊</span>
+                <span data-i18n="playResponse">Play Response</span>
+              </button>
+              <button
+                id="downloadResponseBtn"
+                class="btn btn-accent"
+                onclick="downloadResponseAudio()"
+                disabled
+              >
+                <span>💾</span>
+                <span data-i18n="downloadAudio">Download Audio</span>
+              </button>
+            </div>
+
+            <!-- Status -->
+            <div id="agentStatus"></div>
+
+            <!-- Input Area -->
+            <div class="input-wrapper">
+              <label class="input-label" data-i18n="yourQuery"
+                >Your Query</label
+              >
+              <textarea
+                id="userInput"
+                data-i18n-placeholder="queryPlaceholder"
+                placeholder="Type here or speak...&#10;Example: 'My name is Rahul, age 25, B.Tech ECE student from Haryana'"
+              ></textarea>
+            </div>
+
+            <!-- Mic Recording Player -->
+            <div
+              class="audio-player"
+              id="userMicAudioBox"
+              style="display: none"
+            >
+              <div class="audio-player-header">
+                <span class="audio-player-title"
+                  >🎵
+                  <span data-i18n="yourRecording">Your Recording</span></span
+                >
+                <button
+                  class="btn btn-danger"
+                  style="padding: 6px 12px; font-size: 12px"
+                  onclick="clearUserMicAudio()"
+                >
+                  🗑️ <span data-i18n="clear">Clear</span>
+                </button>
+              </div>
+              <audio id="userMicAudio" controls></audio>
+            </div>
+          </section>
+          <!-- Tool Execution Log -->
+          <div class="card">
+            <div class="card-title">
+              <div class="icon">🔧</div>
+              <span>Tool Execution Log</span>
+            </div>
+            <div id="toolLog" style="max-height: 250px; overflow-y: auto">
+              <div class="tool-log">
+                <span class="tool-name">[SYSTEM]</span> Agent initialized
+              </div>
+            </div>
+          </div>
+
+          <style>
+            /* Tool Log Styles */
+            .tool-log {
+              padding: 12px 16px;
+              border-bottom: 1px solid var(--border-color);
+              font-size: 13px;
+              line-height: 1.5;
+              display: flex;
+              gap: 8px;
+              align-items: center;
+            }
+
+            .tool-log:last-child {
+              border-bottom: none;
+            }
+
+            .tool-name {
+              font-weight: 600;
+              color: var(--primary);
+              background: rgba(5, 150, 105, 0.1);
+              padding: 2px 8px;
+              border-radius: 4px;
+              font-size: 12px;
+            }
+
+            #toolLog {
+              background: var(--bg-secondary);
+              border-radius: var(--radius-md);
+              border: 1px solid var(--border-color);
+              margin-top: 16px;
+            }
+
+            .card-title .icon {
+              width: 32px;
+              height: 32px;
+              border-radius: 50%;
+              background: linear-gradient(
+                135deg,
+                var(--secondary),
+                var(--secondary-light)
+              );
+              color: white;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 16px;
+              flex-shrink: 0;
+            }
+
+            .card-title {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              margin-bottom: 16px;
+              padding-bottom: 12px;
+              border-bottom: 1px solid var(--border-color);
+            }
+          </style>
+
+          <script src="script.js"></script>
+
+          <!-- Response Card -->
+          <section class="card">
+            <div class="card-header">
+              <div class="card-icon card-icon-secondary">🤖</div>
+              <div>
+                <h2 class="card-title" data-i18n="assistantResponse">
+                  Assistant Response
+                </h2>
+                <p class="card-subtitle" data-i18n="personalizedRecs">
+                  Personalized scheme recommendations
+                </p>
+              </div>
+            </div>
+
+            <div class="response-box">
+              <div class="response-label">
+                <span>💬</span> <span data-i18n="response">Response</span>
+              </div>
+              <div
+                class="response-text"
+                id="agentResponse"
+                data-placeholder="Ask me about government schemes, scholarships, or employment programs..."
+              ></div>
+            </div>
+
+            <!-- Response Audio Player -->
+            <div
+              class="audio-player"
+              id="responseAudioBox"
+              style="display: none"
+            >
+              <div class="audio-player-header">
+                <span class="audio-player-title"
+                  >🔊
+                  <span data-i18n="responseAudio">Response Audio</span></span
+                >
+              </div>
+              <audio id="responseAudio" controls></audio>
+            </div>
+          </section>
+
+          <!-- Schemes Section -->
+          <section class="card" id="schemesSection" style="display: none">
+            <div class="card-header">
+              <div class="card-icon card-icon-primary">✅</div>
+              <div>
+                <h2 class="card-title" data-i18n="eligibleSchemes">
+                  Eligible Schemes
+                </h2>
+                <p class="card-subtitle" data-i18n="matchedProfile">
+                  Matched based on your profile
+                </p>
+              </div>
+            </div>
+            <div class="schemes-grid" id="recommendedSchemes"></div>
+          </section>
+
+          <!-- Profile Section -->
+          <section class="card" id="profileSection" style="display: none">
+            <div class="card-header">
+              <div class="card-icon card-icon-accent">👤</div>
+              <div>
+                <h2 class="card-title" data-i18n="yourProfile">Your Profile</h2>
+                <p class="card-subtitle" data-i18n="extractedInfo">
+                  Extracted information
+                </p>
+              </div>
+            </div>
+            <div id="userProfile"></div>
+          </section>
+
+          <!-- Jobs Section -->
+          <section class="card">
+            <div class="card-header">
+              <div class="card-icon card-icon-secondary">💼</div>
+              <div>
+                <h2 class="card-title" data-i18n="applyJobs">
+                  Apply for Jobs Online
+                </h2>
+                <p class="card-subtitle" data-i18n="jobPortals">
+                  Trusted government and private job portals
+                </p>
+              </div>
+            </div>
+
+            <div style="margin-bottom: 16px">
+              <div
+                class="lang-chip"
+                style="margin-bottom: 12px"
+                data-i18n="allIndiaPortals"
+              >
+                All-India Portals
+              </div>
+              <div class="quick-links">
+                <a
+                  href="https://www.linkedin.com/jobs"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">💼</span> LinkedIn Jobs
+                </a>
+                <a
+                  href="https://www.naukri.com"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">📋</span> Naukri.com
+                </a>
+                <a
+                  href="https://in.indeed.com"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">🔍</span> Indeed India
+                </a>
+                <a
+                  href="https://www.ncs.gov.in"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">🏛️</span>
+                  <span data-i18n="ncs">National Career Service</span>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <div
+                class="lang-chip"
+                style="margin-bottom: 12px"
+                data-i18n="forStudents"
+              >
+                For Students & Freshers
+              </div>
+              <div class="quick-links">
+                <a
+                  href="https://internshala.com"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">🎓</span> Internshala
+                </a>
+                <a
+                  href="https://www.freshersworld.com"
+                  target="_blank"
+                  class="quick-link"
+                >
+                  <span class="quick-link-icon">🚀</span> FreshersWorld
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <!-- Profile Summary -->
+          <div class="card sidebar-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-primary">👤</div>
+              <h3 class="card-title" data-i18n="quickProfile">Quick Profile</h3>
+            </div>
+            <div id="sidebarProfile">
+              <p
+                style="font-size: 13px; color: var(--text-muted)"
+                data-i18n="fillDetails"
+              >
+                Fill details or login to see summary here.
+              </p>
+            </div>
+          </div>
+
+          <!-- Voice Language Selector -->
+          <div class="card sidebar-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-secondary">🎤</div>
+              <h3 class="card-title" data-i18n="voiceLanguage">
+                Voice Language
+              </h3>
+            </div>
+            <div class="lang-selector">
+              <div>
+                <label class="input-label" data-i18n="selectVoiceLang"
+                  >Select Voice Language</label
+                >
+                <select
+                  id="langSelect"
+                  class="lang-select"
+                  onchange="onVoiceLanguageChange(this.value)"
+                >
+                  <option value="hi-IN" selected>Hindi (हिंदी)</option>
+                  <option value="en-IN">English (India)</option>
+                  <option value="bn-IN">Bengali (বাংলা)</option>
+                  <option value="ta-IN">Tamil (தமிழ்)</option>
+                  <option value="te-IN">Telugu (తెలుగు)</option>
+                  <option value="mr-IN">Marathi (मराठी)</option>
+                  <option value="gu-IN">Gujarati (ગુજરાતી)</option>
+                  <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+                  <option value="ml-IN">Malayalam (മലയാളം)</option>
+                  <option value="pa-IN">Punjabi (ਪੰਜਾਬੀ)</option>
+                  <option value="ur-IN">Urdu (اردو)</option>
+                </select>
+              </div>
+              <div class="lang-chip" id="currentLangChip">🎤 hi-IN</div>
+            </div>
+          </div>
+
+          <!-- Latest News -->
+          <div class="card sidebar-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-accent">📰</div>
+              <h3 class="card-title" data-i18n="latestUpdates">
+                Latest Updates
+              </h3>
+            </div>
+            <div>
+              <div class="news-item">
+                <div class="news-title">PM Viksit Bharat Rozgar Yojana</div>
+                <div class="news-desc" data-i18n="news1">
+                  Employment-linked incentive for 3.5 crore new jobs with
+                  ₹99,446 crore outlay.
+                </div>
+                <a
+                  href="https://www.pib.gov.in"
+                  target="_blank"
+                  class="news-link"
+                  data-i18n="readMore"
+                  >Read more →</a
+                >
+              </div>
+              <div class="news-item">
+                <div class="news-title">NAPS-2 Apprenticeship</div>
+                <div class="news-desc" data-i18n="news2">
+                  Central scheme reimbursing stipend and training costs.
+                </div>
+                <a
+                  href="https://www.myscheme.gov.in/schemes/naps"
+                  target="_blank"
+                  class="news-link"
+                  data-i18n="readMore"
+                  >Read more →</a
+                >
+              </div>
+              <div class="news-item">
+                <div class="news-title">Skill India Digital</div>
+                <div class="news-desc" data-i18n="news3">
+                  Free online skill courses with certifications.
+                </div>
+                <a
+                  href="https://www.skillindiadigital.gov.in"
+                  target="_blank"
+                  class="news-link"
+                  data-i18n="readMore"
+                  >Read more →</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="card sidebar-card">
+            <div class="card-header">
+              <div class="card-icon card-icon-primary">🔗</div>
+              <h3 class="card-title" data-i18n="officialPortals">
+                Official Portals
+              </h3>
+            </div>
+            <div class="quick-links">
+              <a
+                href="https://www.myscheme.gov.in"
+                target="_blank"
+                class="quick-link"
+              >
+                <span class="quick-link-icon">🏛️</span> myScheme Portal
+              </a>
+              <a
+                href="https://scholarships.gov.in"
+                target="_blank"
+                class="quick-link"
+              >
+                <span class="quick-link-icon">🎓</span>
+                <span data-i18n="scholarships">Scholarships</span>
+              </a>
+              <a
+                href="https://eshram.gov.in"
+                target="_blank"
+                class="quick-link"
+              >
+                <span class="quick-link-icon">👷</span> e-Shram
+              </a>
+              <a href="https://pmjay.gov.in" target="_blank" class="quick-link">
+                <span class="quick-link-icon">🏥</span> Ayushman Bharat
+              </a>
+            </div>
+          </div>
+
+          <!-- Support -->
+          <div
+            class="card sidebar-card"
+            style="
+              background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+              );
+              color: white;
+            "
+          >
+            <h4
+              style="font-size: 15px; margin-bottom: 8px"
+              data-i18n="needHelp"
+            >
+              Need Help?
+            </h4>
+            <p
+              style="font-size: 12px; opacity: 0.9; margin-bottom: 12px"
+              data-i18n="helpDesc"
+            >
+              Our AI assistant can help you find the right government
+              schemeswith mail spotnuru7@gitam.in.
+            </p>
+            <button
+              class="btn"
+              style="
+                background: white;
+                color: var(--primary);
+                padding: 10px 16px;
+              "
+              onclick="toggleVoiceAgent()"
+              data-i18n="askNow"
+            >
+              Ask Now
+            </button>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer-text" data-i18n="footer">
+        Built with ❤️ for Indian Student studying in Gitam university,
+        Visakahapatnam |
+        <a href="https://www.myscheme.gov.in" class="footer-link"
+          >myScheme.gov.in</a
+        >
+      </p>
+    </footer>
+
+    <!-- Floating Widgets -->
+    <div class="floating-widgets">
+      <button
+        class="floating-btn floating-btn-secondary"
+        onclick="scrollToTop()"
+        title="Scroll to top"
+      >
+        ⬆️
+      </button>
+      <button
+        class="floating-btn floating-btn-primary"
+        onclick="toggleVoiceAgent()"
+        title="Voice Assistant"
+        id="floatingMic"
+      >
+        🎙️
+      </button>
+    </div>
+
+    <!-- Shortcuts Modal -->
+    <div class="shortcuts-modal" id="shortcutsModal">
+      <div class="shortcuts-content">
+        <h3 class="shortcuts-title">
+          ⌨️ <span data-i18n="keyboardShortcuts">Keyboard Shortcuts</span>
+        </h3>
+        <div class="shortcut-item">
+          <span class="shortcut-desc" data-i18n="toggleVoice"
+            >Toggle Voice</span
+          >
+          <div class="shortcut-keys">
+            <span class="shortcut-key">Space</span>
+          </div>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc" data-i18n="submitQuery"
+            >Submit Query</span
+          >
+          <div class="shortcut-keys">
+            <span class="shortcut-key">Enter</span>
+          </div>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc" data-i18n="playResponseShort"
+            >Play Response</span
+          >
+          <div class="shortcut-keys">
+            <span class="shortcut-key">Ctrl</span>
+            <span class="shortcut-key">P</span>
+          </div>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc" data-i18n="toggleTheme"
+            >Toggle Theme</span
+          >
+          <div class="shortcut-keys">
+            <span class="shortcut-key">Ctrl</span>
+            <span class="shortcut-key">D</span>
+          </div>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-desc" data-i18n="closeModal">Close Modal</span>
+          <div class="shortcut-keys">
+            <span class="shortcut-key">Esc</span>
+          </div>
+        </div>
+        <button
+          class="btn btn-outline"
+          onclick="closeShortcuts()"
+          style="margin-top: 16px; width: 100%"
+          data-i18n="close"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+      // ============ TRANSLATIONS ============
+      const translations = {
+        en: {
+          appTitle: "Govt Job Assistant",
+          appSubtitle: "AI-Powered Voice Agent & Easy Job Apply",
+          shortcuts: "Shortcuts",
+          export: "Export",
+          quickLogin: "Quick Login:",
+          enterName: "Enter your name to personalize",
+          enter: "Enter",
+          stateReady: "Ready",
+          statePlanning: "Planning",
+          stateSearching: "Searching",
+          stateMatching: "Matching",
+          stateComplete: "Complete",
+          voiceAssistant: "Voice Scheme Assistant",
+          voiceSubtitle: "Speak or type to find eligible government schemes",
+          startAssistant: "Start Assistant",
+          stopAssistant: "Stop Assistant",
+          playResponse: "Play Response",
+          downloadAudio: "Download Audio",
+          yourQuery: "Your Query",
+          queryPlaceholder:
+            "Type here or speak...\nExample: 'My name is Rahul, age 25, B.Tech ECE student from Haryana'",
+          yourRecording: "Your Recording",
+          clear: "Clear",
+          assistantResponse: "Assistant Response",
+          personalizedRecs: "Personalized scheme recommendations",
+          response: "Response",
+          responsePlaceholder:
+            "Ask me about government schemes, scholarships, or employment programs...",
+          responseAudio: "Response Audio",
+          eligibleSchemes: "Eligible Schemes",
+          matchedProfile: "Matched based on your profile",
+          yourProfile: "Your Profile",
+          extractedInfo: "Extracted information",
+          applyJobs: "Apply for Jobs Online",
+          jobPortals: "Trusted government and private job portals",
+          allIndiaPortals: "All-India Portals",
+          ncs: "National Career Service",
+          forStudents: "For Students & Freshers",
+          quickProfile: "Quick Profile",
+          fillDetails: "Fill details or login to see summary here.",
+          voiceLanguage: "Voice Language",
+          selectVoiceLang: "Select Voice Language",
+          latestUpdates: "Latest Updates",
+          news1:
+            "Employment-linked incentive for 3.5 crore new jobs with ₹99,446 crore outlay.",
+          news2: "Central scheme reimbursing stipend and training costs.",
+          news3: "Free online skill courses with certifications.",
+          readMore: "Read more →",
+          officialPortals: "Official Portals",
+          scholarships: "Scholarships",
+          needHelp: "Need Help?",
+          helpDesc:
+            "Our AI assistant can help you find the right government schemes.",
+          askNow: "Ask Now",
+          footer:
+            "Built with ❤️ for Indian Student studying in Gitam university, Visakahapatnam",
+          keyboardShortcuts: "Keyboard Shortcuts",
+          toggleVoice: "Toggle Voice",
+          submitQuery: "Submit Query",
+          playResponseShort: "Play Response",
+          toggleTheme: "Toggle Theme",
+          closeModal: "Close Modal",
+          close: "Close",
+          welcomeMsg: "Welcome",
+          listeningMsg: "🎤 Listening for your query...",
+          readyMsg:
+            "🎉 Government Scheme Assistant ready! Speak or type to begin.",
+          planningMsg: "🧭 Planning your query...",
+          searchingMsg: "🔍 Searching knowledge base...",
+          matchingMsg: "⚙️ Matching eligible schemes...",
+          responseReadyMsg: "✅ Response ready!",
+          playingMsg: "🔊 Playing response...",
+          voiceErrorMsg: "❌ Voice recognition error:",
+          voiceNotAvailable:
+            "❌ Voice recognition not available. Use Chrome browser.",
+          audioDownloaded: "Audio downloaded successfully!",
+          noProfileData: "No profile data to export.",
+          profileExported: "Profile exported!",
+          voiceNotSupported:
+            "Voice recognition not supported in this browser. Please use Chrome.",
+          applyNow: "Apply Now →",
+          introResponse:
+            'Hello! I\'m your AI assistant for Indian government schemes.\n\nPlease tell me about yourself:\n• Your name\n• Age\n• Education (10th / 12th / Graduate / B.Tech / M.Tech)\n• Occupation (Farmer / Student / Engineer / Labour / Business)\n• State\n• Category (BPL / SC / ST if applicable)\n\nExample: "My name is Rahul, age 25, B.Tech student from Haryana"',
+          relatedInfo: "📚 Related Information:",
+          moreDetails: "Would you like more details about any scheme?",
+        },
+
+        hi: {
+          appTitle: "सरकारी योजना सहायक",
+          appSubtitle: "AI-संचालित वॉइस एजेंट",
+          shortcuts: "शॉर्टकट",
+          export: "निर्यात",
+          quickLogin: "त्वरित लॉगिन:",
+          enterName: "व्यक्तिगत बनाने के लिए अपना नाम दर्ज करें",
+          enter: "प्रवेश करें",
+          stateReady: "तैयार",
+          statePlanning: "योजना बना रहे हैं",
+          stateSearching: "खोज रहे हैं",
+          stateMatching: "मिलान कर रहे हैं",
+          stateComplete: "पूर्ण",
+          voiceAssistant: "वॉइस योजना सहायक",
+          voiceSubtitle: "पात्र सरकारी योजनाएं खोजने के लिए बोलें या टाइप करें",
+          startAssistant: "सहायक शुरू करें",
+          stopAssistant: "सहायक रोकें",
+          playResponse: "प्रतिक्रिया चलाएं",
+          downloadAudio: "ऑडियो डाउनलोड करें",
+          yourQuery: "आपकी क्वेरी",
+          queryPlaceholder:
+            "यहां टाइप करें या बोलें...\nउदाहरण: 'मेरा नाम राहुल है, उम्र 25, हरियाणा से B.Tech ECE छात्र'",
+          yourRecording: "आपकी रिकॉर्डिंग",
+          clear: "साफ़ करें",
+          assistantResponse: "सहायक प्रतिक्रिया",
+          personalizedRecs: "व्यक्तिगत योजना सिफारिशें",
+          response: "प्रतिक्रिया",
+          responsePlaceholder:
+            "मुझसे सरकारी योजनाओं, छात्रवृत्ति या रोजगार कार्यक्रमों के बारे में पूछें...",
+          responseAudio: "प्रतिक्रिया ऑडियो",
+          eligibleSchemes: "पात्र योजनाएं",
+          matchedProfile: "आपकी प्रोफाइल के आधार पर मिलान",
+          yourProfile: "आपकी प्रोफाइल",
+          extractedInfo: "निकाली गई जानकारी",
+          applyJobs: "ऑनलाइन नौकरियों के लिए आवेदन करें",
+          jobPortals: "विश्वसनीय सरकारी और निजी नौकरी पोर्टल",
+          allIndiaPortals: "अखिल भारतीय पोर्टल",
+          ncs: "राष्ट्रीय करियर सेवा",
+          forStudents: "छात्रों और फ्रेशर्स के लिए",
+          quickProfile: "त्वरित प्रोफाइल",
+          fillDetails: "यहां सारांश देखने के लिए विवरण भरें या लॉगिन करें।",
+          voiceLanguage: "वॉइस भाषा",
+          selectVoiceLang: "वॉइस भाषा चुनें",
+          latestUpdates: "नवीनतम अपडेट",
+          news1:
+            "₹99,446 करोड़ के परिव्यय के साथ 3.5 करोड़ नई नौकरियों के लिए रोजगार-लिंक्ड प्रोत्साहन।",
+          news2:
+            "वजीफा और प्रशिक्षण लागत की प्रतिपूर्ति करने वाली केंद्रीय योजना।",
+          news3: "प्रमाणपत्रों के साथ मुफ्त ऑनलाइन कौशल पाठ्यक्रम।",
+          readMore: "और पढ़ें →",
+          officialPortals: "आधिकारिक पोर्टल",
+          scholarships: "छात्रवृत्ति",
+          needHelp: "मदद चाहिए?",
+          helpDesc:
+            "हमारा AI सहायक आपको सही सरकारी योजनाएं खोजने में मदद कर सकता है।",
+          askNow: "अभी पूछें",
+          footer: "भारतीय नागरिकों के लिए ❤️ से बनाया गया",
+          keyboardShortcuts: "कीबोर्ड शॉर्टकट",
+          toggleVoice: "वॉइस टॉगल करें",
+          submitQuery: "क्वेरी सबमिट करें",
+          playResponseShort: "प्रतिक्रिया चलाएं",
+          toggleTheme: "थीम टॉगल करें",
+          closeModal: "मोडल बंद करें",
+          close: "बंद करें",
+          welcomeMsg: "स्वागत है",
+          listeningMsg: "🎤 आपकी क्वेरी सुन रहे हैं...",
+          readyMsg:
+            "🎉 सरकारी योजना सहायक तैयार है! शुरू करने के लिए बोलें या टाइप करें।",
+          planningMsg: "🧭 आपकी क्वेरी की योजना बना रहे हैं...",
+          searchingMsg: "🔍 ज्ञान आधार खोज रहे हैं...",
+          matchingMsg: "⚙️ पात्र योजनाओं का मिलान कर रहे हैं...",
+          responseReadyMsg: "✅ प्रतिक्रिया तैयार!",
+          playingMsg: "🔊 प्रतिक्रिया चला रहे हैं...",
+          voiceErrorMsg: "❌ वॉइस पहचान त्रुटि:",
+          voiceNotAvailable:
+            "❌ वॉइस पहचान उपलब्ध नहीं है। Chrome ब्राउज़र का उपयोग करें।",
+          audioDownloaded: "ऑडियो सफलतापूर्वक डाउनलोड हुआ!",
+          noProfileData: "निर्यात करने के लिए कोई प्रोफाइल डेटा नहीं।",
+          profileExported: "प्रोफाइल निर्यात हुई!",
+          voiceNotSupported:
+            "इस ब्राउज़र में वॉइस पहचान समर्थित नहीं है। कृपया Chrome का उपयोग करें।",
+          applyNow: "अभी आवेदन करें →",
+          introResponse:
+            'नमस्ते! मैं भारतीय सरकारी योजनाओं के लिए आपका AI सहायक हूं।\n\nकृपया मुझे अपने बारे में बताएं:\n• आपका नाम\n• उम्र\n• शिक्षा (10वीं / 12वीं / स्नातक / B.Tech / M.Tech)\n• व्यवसाय (किसान / छात्र / इंजीनियर / मजदूर / व्यवसाय)\n• राज्य\n• श्रेणी (BPL / SC / ST यदि लागू हो)\n\nउदाहरण: "मेरा नाम राहुल है, उम्र 25, हरियाणा से B.Tech छात्र"',
+          relatedInfo: "📚 संबंधित जानकारी:",
+          moreDetails: "क्या आप किसी योजना के बारे में अधिक जानकारी चाहते हैं?",
+        },
+        ta: {
+          appTitle: "அரசு திட்ட உதவியாளர்",
+          appSubtitle: "AI-இயக்கப்படும் குரல் முகவர்",
+          shortcuts: "குறுக்குவழிகள்",
+          export: "ஏற்றுமதி",
+          quickLogin: "விரைவு உள்நுழைவு:",
+          enterName: "தனிப்பயனாக்க உங்கள் பெயரை உள்ளிடவும்",
+          enter: "உள்ளிடவும்",
+          stateReady: "தயார்",
+          statePlanning: "திட்டமிடுதல்",
+          stateSearching: "தேடுகிறது",
+          stateMatching: "பொருத்துகிறது",
+          stateComplete: "முடிந்தது",
+          voiceAssistant: "குரல் திட்ட உதவியாளர்",
+          voiceSubtitle:
+            "தகுதியான அரசு திட்டங்களைக் கண்டறிய பேசவும் அல்லது தட்டச்சு செய்யவும்",
+          startAssistant: "உதவியாளரைத் தொடங்கு",
+          stopAssistant: "உதவியாளரை நிறுத்து",
+          playResponse: "பதிலை இயக்கு",
+          downloadAudio: "ஆடியோ பதிவிறக்கு",
+          yourQuery: "உங்கள் கேள்வி",
+          queryPlaceholder:
+            "இங்கே தட்டச்சு செய்யவும் அல்லது பேசவும்...\nஉதாரணம்: 'என் பெயர் ராகுல், வயது 25, ஹரியானாவிலிருந்து B.Tech ECE மாணவர்'",
+          yourRecording: "உங்கள் பதிவு",
+          clear: "அழி",
+          assistantResponse: "உதவியாளர் பதில்",
+          personalizedRecs: "தனிப்பயனாக்கப்பட்ட திட்ட பரிந்துரைகள்",
+          response: "பதில்",
+          responsePlaceholder:
+            "அரசு திட்டங்கள், உதவித்தொகைகள் அல்லது வேலைவாய்ப்பு திட்டங்களைப் பற்றி கேளுங்கள்...",
+          responseAudio: "பதில் ஆடியோ",
+          eligibleSchemes: "தகுதியான திட்டங்கள்",
+          matchedProfile: "உங்கள் சுயவிவரத்தின் அடிப்படையில் பொருத்தப்பட்டது",
+          yourProfile: "உங்கள் சுயவிவரம்",
+          extractedInfo: "பிரித்தெடுக்கப்பட்ட தகவல்",
+          applyJobs: "ஆன்லைனில் வேலைகளுக்கு விண்ணப்பிக்கவும்",
+          jobPortals: "நம்பகமான அரசு மற்றும் தனியார் வேலை போர்ட்டல்கள்",
+          allIndiaPortals: "அகில இந்திய போர்ட்டல்கள்",
+          ncs: "தேசிய தொழில் சேவை",
+          forStudents: "மாணவர்கள் மற்றும் புதியவர்களுக்கு",
+          quickProfile: "விரைவு சுயவிவரம்",
+          fillDetails:
+            "சுருக்கத்தைப் பார்க்க விவரங்களை நிரப்பவும் அல்லது உள்நுழையவும்.",
+          voiceLanguage: "குரல் மொழி",
+          selectVoiceLang: "குரல் மொழியைத் தேர்ந்தெடுக்கவும்",
+          latestUpdates: "சமீபத்திய புதுப்பிப்புகள்",
+          news1:
+            "₹99,446 கோடி ஒதுக்கீட்டுடன் 3.5 கோடி புதிய வேலைகளுக்கான வேலைவாய்ப்பு-இணைக்கப்பட்ட ஊக்கத்தொகை.",
+          news2:
+            "உதவித்தொகை மற்றும் பயிற்சி செலவுகளை திருப்பிச் செலுத்தும் மத்திய திட்டம்.",
+          news3: "சான்றிதழ்களுடன் இலவச ஆன்லைன் திறன் பாடநெறிகள்.",
+          readMore: "மேலும் படிக்க →",
+          officialPortals: "அதிகாரப்பூர்வ போர்ட்டல்கள்",
+          scholarships: "உதவித்தொகைகள்",
+          needHelp: "உதவி வேண்டுமா?",
+          helpDesc:
+            "எங்கள் AI உதவியாளர் சரியான அரசு திட்டங்களைக் கண்டறிய உங்களுக்கு உதவ முடியும்.",
+          askNow: "இப்போது கேளுங்கள்",
+          footer: "இந்திய குடிமக்களுக்காக ❤️ உடன் உருவாக்கப்பட்டது",
+          keyboardShortcuts: "விசைப்பலகை குறுக்குவழிகள்",
+          toggleVoice: "குரலை மாற்று",
+          submitQuery: "கேள்வியை சமர்ப்பி",
+          playResponseShort: "பதிலை இயக்கு",
+          toggleTheme: "தீம் மாற்று",
+          closeModal: "மோடலை மூடு",
+          close: "மூடு",
+          welcomeMsg: "வரவேற்கிறோம்",
+          listeningMsg: "🎤 உங்கள் கேள்வியைக் கேட்கிறது...",
+          readyMsg:
+            "🎉 அரசு திட்ட உதவியாளர் தயார்! தொடங்க பேசவும் அல்லது தட்டச்சு செய்யவும்.",
+          planningMsg: "🧭 உங்கள் கேள்வியைத் திட்டமிடுகிறது...",
+          searchingMsg: "🔍 அறிவுத் தளத்தைத் தேடுகிறது...",
+          matchingMsg: "⚙️ தகுதியான திட்டங்களைப் பொருத்துகிறது...",
+          responseReadyMsg: "✅ பதில் தயார்!",
+          playingMsg: "🔊 பதிலை இயக்குகிறது...",
+          voiceErrorMsg: "❌ குரல் அங்கீகார பிழை:",
+          voiceNotAvailable:
+            "❌ குரல் அங்கீகாரம் கிடைக்கவில்லை. Chrome உலாவியைப் பயன்படுத்தவும்.",
+          audioDownloaded: "ஆடியோ வெற்றிகரமாக பதிவிறக்கப்பட்டது!",
+          noProfileData: "ஏற்றுமதி செய்ய சுயவிவரத் தரவு இல்லை.",
+          profileExported: "சுயவிவரம் ஏற்றுமதி செய்யப்பட்டது!",
+          voiceNotSupported:
+            "இந்த உலாவியில் குரல் அங்கீகாரம் ஆதரிக்கப்படவில்லை. Chrome ஐப் பயன்படுத்தவும்.",
+          applyNow: "இப்போது விண்ணப்பிக்கவும் →",
+          introResponse:
+            'வணக்கம்! நான் இந்திய அரசு திட்டங்களுக்கான உங்கள் AI உதவியாளர்.\n\nதயவுசெய்து உங்களைப் பற்றி சொல்லுங்கள்:\n• உங்கள் பெயர்\n• வயது\n• கல்வி (10வது / 12வது / பட்டதாரி / B.Tech / M.Tech)\n• தொழில் (விவசாயி / மாணவர் / பொறியாளர் / தொழிலாளி / வணிகம்)\n• மாநிலம்\n• வகை (BPL / SC / ST பொருந்தினால்)\n\nஉதாரணம்: "என் பெயர் ராகுல், வயது 25, ஹரியானாவிலிருந்து B.Tech மாணவர்"',
+          relatedInfo: "📚 தொடர்புடைய தகவல்:",
+          moreDetails: "ஏதேனும் திட்டத்தைப் பற்றி மேலும் விவரங்கள் வேண்டுமா?",
+        },
+        te: {
+          appTitle: "ప్రభుత్వ పథకం సహాయకుడు",
+          appSubtitle: "AI-ఆధారిత వాయిస్ ఏజెంట్",
+          shortcuts: "షార్ట్‌కట్‌లు",
+          export: "ఎగుమతి",
+          quickLogin: "త్వరిత లాగిన్:",
+          enterName: "వ్యక్తిగతీకరించడానికి మీ పేరు నమోదు చేయండి",
+          enter: "నమోదు చేయండి",
+          stateReady: "సిద్ధంగా ఉంది",
+          statePlanning: "ప్లానింగ్",
+          stateSearching: "శోధిస్తోంది",
+          stateMatching: "సరిపోలుస్తోంది",
+          stateComplete: "పూర్తయింది",
+          voiceAssistant: "వాయిస్ పథకం సహాయకుడు",
+          voiceSubtitle:
+            "అర్హమైన ప్రభుత్వ పథకాలను కనుగొనడానికి మాట్లాడండి లేదా టైప్ చేయండి",
+          startAssistant: "సహాయకుడిని ప్రారంభించండి",
+          stopAssistant: "సహాయకుడిని ఆపండి",
+          playResponse: "ప్రతిస్పందన ప్లే చేయండి",
+          downloadAudio: "ఆడియో డౌన్‌లోడ్ చేయండి",
+          yourQuery: "మీ ప్రశ్న",
+          queryPlaceholder:
+            "ఇక్కడ టైప్ చేయండి లేదా మాట్లాడండి...\nఉదాహరణ: 'నా పేరు రాహుల్, వయస్సు 25, హర్యానా నుండి B.Tech ECE విద్యార్థి'",
+          yourRecording: "మీ రికార్డింగ్",
+          clear: "క్లియర్",
+          assistantResponse: "సహాయకుడి ప్రతిస్పందన",
+          personalizedRecs: "వ్యక్తిగతీకరించిన పథకం సిఫార్సులు",
+          response: "ప్రతిస్పందన",
+          responsePlaceholder:
+            "ప్రభుత్వ పథకాలు, స్కాలర్‌షిప్‌లు లేదా ఉద్యోగ కార్యక్రమాల గురించి నన్ను అడగండి...",
+          responseAudio: "ప్రతిస్పందన ఆడియో",
+          eligibleSchemes: "అర్హమైన పథకాలు",
+          matchedProfile: "మీ ప్రొఫైల్ ఆధారంగా సరిపోలింది",
+          yourProfile: "మీ ప్రొఫైల్",
+          extractedInfo: "సంగ్రహించిన సమాచారం",
+          applyJobs: "ఆన్‌లైన్‌లో ఉద్యోగాలకు దరఖాస్తు చేయండి",
+          jobPortals: "విశ్వసనీయ ప్రభుత్వ మరియు ప్రైవేట్ ఉద్యోగ పోర్టల్‌లు",
+          allIndiaPortals: "అఖిల భారత పోర్టల్‌లు",
+          ncs: "జాతీయ కెరీర్ సేవ",
+          forStudents: "విద్యార్థులు & ఫ్రెషర్ల కోసం",
+          quickProfile: "త్వరిత ప్రొఫైల్",
+          fillDetails: "సారాంశం చూడటానికి వివరాలు నింపండి లేదా లాగిన్ అవ్వండి.",
+          voiceLanguage: "వాయిస్ భాష",
+          selectVoiceLang: "వాయిస్ భాషను ఎంచుకోండి",
+          latestUpdates: "తాజా అప్‌డేట్‌లు",
+          news1:
+            "₹99,446 కోట్ల కేటాయింపుతో 3.5 కోట్ల కొత్త ఉద్యోగాలకు ఉద్యోగ-లింక్డ్ ప్రోత్సాహకం.",
+          news2:
+            "స్టైపెండ్ మరియు శిక్షణ ఖర్చులను తిరిగి చెల్లించే కేంద్ర పథకం.",
+          news3: "సర్టిఫికేట్‌లతో ఉచిత ఆన్‌లైన్ నైపుణ్య కోర్సులు.",
+          readMore: "మరింత చదవండి →",
+          officialPortals: "అధికారిక పోర్టల్‌లు",
+          scholarships: "స్కాలర్‌షిప్‌లు",
+          needHelp: "సహాయం కావాలా?",
+          helpDesc:
+            "మా AI సహాయకుడు సరైన ప్రభుత్వ పథకాలను కనుగొనడంలో మీకు సహాయపడగలదు.",
+          askNow: "ఇప్పుడు అడగండి",
+          footer: "భారతీయ పౌరుల కోసం ❤️ తో నిర్మించబడింది",
+          keyboardShortcuts: "కీబోర్డ్ షార్ట్‌కట్‌లు",
+          toggleVoice: "వాయిస్ టోగుల్ చేయండి",
+          submitQuery: "ప్రశ్న సమర్పించండి",
+          playResponseShort: "ప్రతిస్పందన ప్లే చేయండి",
+          toggleTheme: "థీమ్ టోగుల్ చేయండి",
+          closeModal: "మోడల్ మూసివేయండి",
+          close: "మూసివేయండి",
+          welcomeMsg: "స్వాగతం",
+          listeningMsg: "🎤 మీ ప్రశ్న వింటోంది...",
+          readyMsg:
+            "🎉 ప్రభుత్వ పథకం సహాయకుడు సిద్ధంగా ఉంది! ప్రారంభించడానికి మాట్లాడండి లేదా టైప్ చేయండి.",
+          planningMsg: "🧭 మీ ప్రశ్నను ప్లాన్ చేస్తోంది...",
+          searchingMsg: "🔍 నాలెడ్జ్ బేస్ శోధిస్తోంది...",
+          matchingMsg: "⚙️ అర్హమైన పథకాలను సరిపోలుస్తోంది...",
+          responseReadyMsg: "✅ ప్రతిస్పందన సిద్ధంగా ఉంది!",
+          playingMsg: "🔊 ప్రతిస్పందన ప్లే అవుతోంది...",
+          voiceErrorMsg: "❌ వాయిస్ గుర్తింపు లోపం:",
+          voiceNotAvailable:
+            "❌ వాయిస్ గుర్తింపు అందుబాటులో లేదు. Chrome బ్రౌజర్ ఉపయోగించండి.",
+          audioDownloaded: "ఆడియో విజయవంతంగా డౌన్‌లోడ్ అయింది!",
+          noProfileData: "ఎగుమతి చేయడానికి ప్రొఫైల్ డేటా లేదు.",
+          profileExported: "ప్రొఫైల్ ఎగుమతి అయింది!",
+          voiceNotSupported:
+            "ఈ బ్రౌజర్‌లో వాయిస్ గుర్తింపు సపోర్ట్ కాదు. దయచేసి Chrome ఉపయోగించండి.",
+          applyNow: "ఇప్పుడు దరఖాస్తు చేయండి →",
+          introResponse:
+            'నమస్కారం! నేను భారత ప్రభుత్వ పథకాల కోసం మీ AI సహాయకుడిని.\n\nదయచేసి మీ గురించి చెప్పండి:\n• మీ పేరు\n• వయస్సు\n• విద్య (10వ / 12వ / గ్రాడ్యుయేట్ / B.Tech / M.Tech)\n• వృత్తి (రైతు / విద్యార్థి / ఇంజనీర్ / కార్మికుడు / వ్యాపారం)\n• రాష్ట్రం\n• వర్గం (BPL / SC / ST వర్తించినట్లయితే)\n\nఉదాహరణ: "నా పేరు రాహుల్, వయస్సు 25, హర్యానా నుండి B.Tech విద్యార్థి"',
+          relatedInfo: "📚 సంబంధిత సమాచారం:",
+          moreDetails: "ఏదైనా పథకం గురించి మరిన్ని వివరాలు కావాలా?",
+        },
+        bn: {
+          appTitle: "সরকারি প্রকল্প সহায়ক",
+          appSubtitle: "AI-চালিত ভয়েস এজেন্ট",
+          shortcuts: "শর্টকাট",
+          export: "রপ্তানি",
+          quickLogin: "দ্রুত লগইন:",
+          enterName: "ব্যক্তিগতকরণের জন্য আপনার নাম লিখুন",
+          enter: "প্রবেশ করুন",
+          stateReady: "প্রস্তুত",
+          statePlanning: "পরিকল্পনা করছে",
+          stateSearching: "অনুসন্ধান করছে",
+          stateMatching: "মিলান করছে",
+          stateComplete: "সম্পূর্ণ",
+          voiceAssistant: "ভয়েস প্রকল্প সহায়ক",
+          voiceSubtitle: "যোগ্য সরকারি প্রকল্প খুঁজতে বলুন বা টাইপ করুন",
+          startAssistant: "সহায়ক শুরু করুন",
+          stopAssistant: "সহায়ক বন্ধ করুন",
+          playResponse: "উত্তর চালান",
+          downloadAudio: "অডিও ডাউনলোড করুন",
+          yourQuery: "আপনার প্রশ্ন",
+          queryPlaceholder:
+            "এখানে টাইপ করুন বা বলুন...\nউদাহরণ: 'আমার নাম রাহুল, বয়স 25, হরিয়ানা থেকে B.Tech ECE ছাত্র'",
+          yourRecording: "আপনার রেকর্ডিং",
+          clear: "মুছুন",
+          assistantResponse: "সহায়কের উত্তর",
+          personalizedRecs: "ব্যক্তিগতকৃত প্রকল্প সুপারিশ",
+          response: "উত্তর",
+          responsePlaceholder:
+            "সরকারি প্রকল্প, বৃত্তি বা চাকরি প্রোগ্রাম সম্পর্কে জিজ্ঞাসা করুন...",
+          responseAudio: "উত্তর অডিও",
+          eligibleSchemes: "যোগ্য প্রকল্প",
+          matchedProfile: "আপনার প্রোফাইলের ভিত্তিতে মিলান",
+          yourProfile: "আপনার প্রোফাইল",
+          extractedInfo: "নির্ষ্কাশিত তথ্য",
+          applyJobs: "অনলাইনে চাকরির জন্য আবেদন করুন",
+          jobPortals: "বিশ্বস্ত সরকারি ও বেসরকারি চাকরি পোর্টাল",
+          allIndiaPortals: "সর্বভারতীয় পোর্টাল",
+          ncs: "জাতীয় ক্যারিয়ার সেবা",
+          forStudents: "ছাত্র ও ফ্রেশারদের জন্য",
+          quickProfile: "দ্রুত প্রোফাইল",
+          fillDetails: "সারাংশ দেখতে বিস্তারিত পূরণ করুন বা লগইন করুন।",
+          voiceLanguage: "ভয়েস ভাষা",
+          selectVoiceLang: "ভয়েস ভাষা নির্বাচন করুন",
+          latestUpdates: "সর্বশেষ আপডেট",
+          news1:
+            "₹99,446 কোটি বরাদ্দ সহ 3.5 কোটি নতুন চাকরির জন্য কর্মসংস্থান-সংযুক্ত প্রণোদনা।",
+          news2: "বৃত্তি এবং প্রশিক্ষণ খরচ ফেরত দেওয়া কেন্দ্রীয় প্রকল্প।",
+          news3: "সার্টিফিকেট সহ বিনামূল্যে অনলাইন দক্ষতা কোর্স।",
+          readMore: "আরও পড়ুন →",
+          officialPortals: "অফিসিয়াল পোর্টাল",
+          scholarships: "বৃত্তি",
+          needHelp: "সাহায্য দরকার?",
+          helpDesc:
+            "আমাদের AI সহায়ক সঠিক সরকারি প্রকল্প খুঁজে পেতে আপনাকে সাহায্য করতে পারে।",
+          askNow: "এখনই জিজ্ঞাসা করুন",
+          footer: "ভারতীয় নাগরিকদের জন্য ❤️ দিয়ে তৈরি",
+          keyboardShortcuts: "কীবোর্ড শর্টকাট",
+          toggleVoice: "ভয়েস টগল করুন",
+          submitQuery: "প্রশ্ন জমা দিন",
+          playResponseShort: "উত্তর চালান",
+          toggleTheme: "থিম টগল করুন",
+          closeModal: "মোডাল বন্ধ করুন",
+          close: "বন্ধ করুন",
+          welcomeMsg: "স্বাগতম",
+          listeningMsg: "🎤 আপনার প্রশ্ন শুনছে...",
+          readyMsg:
+            "🎉 সরকারি প্রকল্প সহায়ক প্রস্তুত! শুরু করতে বলুন বা টাইপ করুন।",
+          planningMsg: "🧭 আপনার প্রশ্নের পরিকল্পনা করছে...",
+          searchingMsg: "🔍 জ্ঞান ভিত্তি অনুসন্ধান করছে...",
+          matchingMsg: "⚙️ যোগ্য প্রকল্প মিলান করছে...",
+          responseReadyMsg: "✅ উত্তর প্রস্তুত!",
+          playingMsg: "🔊 উত্তর চালাচ্ছে...",
+          voiceErrorMsg: "❌ ভয়েস শনাক্তকরণ ত্রুটি:",
+          voiceNotAvailable:
+            "❌ ভয়েস শনাক্তকরণ উপলব্ধ নয়। Chrome ব্রাউজার ব্যবহার করুন।",
+          audioDownloaded: "অডিও সফলভাবে ডাউনলোড হয়েছে!",
+          noProfileData: "রপ্তানি করার জন্য কোন প্রোফাইল ডেটা নেই।",
+          profileExported: "প্রোফাইল রপ্তানি হয়েছে!",
+          voiceNotSupported:
+            "এই ব্রাউজারে ভয়েস শনাক্তকরণ সমর্থিত নয়। অনুগ্রহ করে Chrome ব্যবহার করুন।",
+          applyNow: "এখনই আবেদন করুন →",
+          introResponse:
+            'নমস্কার! আমি ভারতীয় সরকারি প্রকল্পগুলির জন্য আপনার AI সহায়ক।\n\nঅনুগ্রহ করে আপনার সম্পর্কে বলুন:\n• আপনার নাম\n• বয়স\n• শিক্ষা (10ম / 12ম / স্নাতক / B.Tech / M.Tech)\n• পেশা (কৃষক / ছাত্র / প্রকৌশলী / শ্রমিক / ব্যবসা)\n• রাজ্য\n• বিভাগ (BPL / SC / ST প্রযোজ্য হলে)\n\nউদাহরণ: "আমার নাম রাহুল, বয়স 25, হরিয়ানা থেকে B.Tech ছাত্র"',
+          relatedInfo: "📚 সম্পর্কিত তথ্য:",
+          moreDetails: "কোন প্রকল্প সম্পর্কে আরও বিস্তারিত চান?",
+        },
+        mr: {
+          appTitle: "सरकारी योजना सहाय्यक",
+          appSubtitle: "AI-चालित व्हॉइस एजंट",
+          shortcuts: "शॉर्टकट",
+          export: "निर्यात",
+          quickLogin: "त्वरित लॉगिन:",
+          enterName: "वैयक्तिकीकरणासाठी तुमचे नाव प्रविष्ट करा",
+          enter: "प्रविष्ट करा",
+          stateReady: "तयार",
+          statePlanning: "नियोजन",
+          stateSearching: "शोधत आहे",
+          stateMatching: "जुळवत आहे",
+          stateComplete: "पूर्ण",
+          voiceAssistant: "व्हॉइस योजना सहाय्यक",
+          voiceSubtitle: "पात्र सरकारी योजना शोधण्यासाठी बोला किंवा टाइप करा",
+          startAssistant: "सहाय्यक सुरू करा",
+          stopAssistant: "सहाय्यक थांबवा",
+          playResponse: "प्रतिसाद प्ले करा",
+          downloadAudio: "ऑडिओ डाउनलोड करा",
+          yourQuery: "तुमची क्वेरी",
+          queryPlaceholder:
+            "येथे टाइप करा किंवा बोला...\nउदाहरण: 'माझे नाव राहुल, वय 25, हरियाणामधील B.Tech ECE विद्यार्थी'",
+          yourRecording: "तुमची रेकॉर्डिंग",
+          clear: "साफ करा",
+          assistantResponse: "सहाय्यक प्रतिसाद",
+          personalizedRecs: "वैयक्तिकृत योजना शिफारसी",
+          response: "प्रतिसाद",
+          responsePlaceholder:
+            "सरकारी योजना, शिष्यवृत्ती किंवा रोजगार कार्यक्रमांबद्दल विचारा...",
+          responseAudio: "प्रतिसाद ऑडिओ",
+          eligibleSchemes: "पात्र योजना",
+          matchedProfile: "तुमच्या प्रोफाइलवर आधारित जुळवले",
+          yourProfile: "तुमचे प्रोफाइल",
+          extractedInfo: "काढलेली माहिती",
+          applyJobs: "ऑनलाइन नोकऱ्यांसाठी अर्ज करा",
+          jobPortals: "विश्वसनीय सरकारी आणि खाजगी नोकरी पोर्टल",
+          allIndiaPortals: "अखिल भारतीय पोर्टल",
+          ncs: "राष्ट्रीय करिअर सेवा",
+          forStudents: "विद्यार्थी आणि फ्रेशर्ससाठी",
+          quickProfile: "त्वरित प्रोफाइल",
+          fillDetails: "सारांश पाहण्यासाठी तपशील भरा किंवा लॉगिन करा.",
+          voiceLanguage: "व्हॉइस भाषा",
+          selectVoiceLang: "व्हॉइस भाषा निवडा",
+          latestUpdates: "नवीनतम अद्यतने",
+          news1:
+            "₹99,446 कोटी तरतुदीसह 3.5 कोटी नवीन नोकऱ्यांसाठी रोजगार-जोडलेले प्रोत्साहन.",
+          news2: "शिष्यवृत्ती आणि प्रशिक्षण खर्च परत करणारी केंद्रीय योजना.",
+          news3: "प्रमाणपत्रांसह मोफत ऑनलाइन कौशल्य अभ्यासक्रम.",
+          readMore: "अधिक वाचा →",
+          officialPortals: "अधिकृत पोर्टल",
+          scholarships: "शिष्यवृत्ती",
+          needHelp: "मदत हवी आहे?",
+          helpDesc:
+            "आमचा AI सहाय्यक योग्य सरकारी योजना शोधण्यात तुम्हाला मदत करू शकतो.",
+          askNow: "आत्ता विचारा",
+          footer: "भारतीय नागरिकांसाठी ❤️ ने बनवले",
+          keyboardShortcuts: "कीबोर्ड शॉर्टकट",
+          toggleVoice: "व्हॉइस टॉगल करा",
+          submitQuery: "क्वेरी सबमिट करा",
+          playResponseShort: "प्रतिसाद प्ले करा",
+          toggleTheme: "थीम टॉगल करा",
+          closeModal: "मोडल बंद करा",
+          close: "बंद करा",
+          welcomeMsg: "स्वागत आहे",
+          listeningMsg: "🎤 तुमची क्वेरी ऐकत आहे...",
+          readyMsg:
+            "🎉 सरकारी योजना सहाय्यक तयार आहे! सुरू करण्यासाठी बोला किंवा टाइप करा.",
+          planningMsg: "🧭 तुमच्या क्वेरीचे नियोजन करत आहे...",
+          searchingMsg: "🔍 ज्ञान आधार शोधत आहे...",
+          matchingMsg: "⚙️ पात्र योजना जुळवत आहे...",
+          responseReadyMsg: "✅ प्रतिसाद तयार!",
+          playingMsg: "🔊 प्रतिसाद प्ले करत आहे...",
+          voiceErrorMsg: "❌ व्हॉइस ओळख त्रुटी:",
+          voiceNotAvailable: "❌ व्हॉइस ओळख उपलब्ध नाही. Chrome ब्राउझर वापरा.",
+          audioDownloaded: "ऑडिओ यशस्वीरित्या डाउनलोड झाले!",
+          noProfileData: "निर्यात करण्यासाठी प्रोफाइल डेटा नाही.",
+          profileExported: "प्रोफाइल निर्यात झाले!",
+          voiceNotSupported:
+            "या ब्राउझरमध्ये व्हॉइस ओळख समर्थित नाही. कृपया Chrome वापरा.",
+          applyNow: "आत्ता अर्ज करा →",
+          introResponse:
+            'नमस्कार! मी भारतीय सरकारी योजनांसाठी तुमचा AI सहाय्यक आहे.\n\nकृपया तुमच्याबद्दल सांगा:\n• तुमचे नाव\n• वय\n• शिक्षण (10वी / 12वी / पदवीधर / B.Tech / M.Tech)\n• व्यवसाय (शेतकरी / विद्यार्थी / अभियंता / मजूर / व्यवसाय)\n• राज्य\n• श्रेणी (BPL / SC / ST लागू असल्यास)\n\nउदाहरण: "माझे नाव राहुल, वय 25, हरियाणातून B.Tech विद्यार्थी"',
+          relatedInfo: "📚 संबंधित माहिती:",
+          moreDetails: "कोणत्याही योजनेबद्दल अधिक तपशील हवे आहेत का?",
+        },
+        gu: {
+          appTitle: "સરકારી યોજના સહાયક",
+          appSubtitle: "AI-સંચાલિત વૉઇસ એજન્ટ",
+          shortcuts: "શૉર્ટકટ્સ",
+          export: "નિકાસ",
+          quickLogin: "ઝડપી લૉગિન:",
+          enterName: "વ્યક્તિગત કરવા માટે તમારું નામ દાખલ કરો",
+          enter: "દાખલ કરો",
+          stateReady: "તૈયાર",
+          statePlanning: "આયોજન",
+          stateSearching: "શોધી રહ્યું છે",
+          stateMatching: "મેળ કરી રહ્યું છે",
+          stateComplete: "પૂર્ણ",
+          voiceAssistant: "વૉઇસ યોજના સહાયક",
+          voiceSubtitle: "લાયક સરકારી યોજનાઓ શોધવા માટે બોલો અથવા ટાઇપ કરો",
+          startAssistant: "સહાયક શરૂ કરો",
+          stopAssistant: "સહાયક બંધ કરો",
+          playResponse: "પ્રતિસાદ ચલાવો",
+          downloadAudio: "ઑડિઓ ડાઉનલોડ કરો",
+          yourQuery: "તમારી ક્વેરી",
+          queryPlaceholder:
+            "અહીં ટાઇપ કરો અથવા બોલો...\nઉદાહરણ: 'મારું નામ રાહુલ છે, ઉંમર 25, હરિયાણાથી B.Tech ECE વિદ્યાર્થી'",
+          yourRecording: "તમારી રેકોર્ડિંગ",
+          clear: "સાફ કરો",
+          assistantResponse: "સહાયક પ્રતિસાદ",
+          personalizedRecs: "વ્યક્તિગત યોજના ભલામણો",
+          response: "પ્રતિસાદ",
+          responsePlaceholder:
+            "સરકારી યોજનાઓ, શિષ્યવૃત્તિ અથવા રોજગાર કાર્યક્રમો વિશે પૂછો...",
+          responseAudio: "પ્રતિસાદ ઑડિઓ",
+          eligibleSchemes: "લાયક યોજનાઓ",
+          matchedProfile: "તમારી પ્રોફાઇલના આધારે મેળ",
+          yourProfile: "તમારી પ્રોફાઇલ",
+          extractedInfo: "કાઢવામાં આવેલી માહિતી",
+          applyJobs: "ઑનલાઇન નોકરીઓ માટે અરજી કરો",
+          jobPortals: "વિશ્વસનીય સરકારી અને ખાનગી નોકરી પોર્ટલ્સ",
+          allIndiaPortals: "અખિલ ભારતીય પોર્ટલ્સ",
+          ncs: "રાષ્ટ્રીય કારકિર્દી સેવા",
+          forStudents: "વિદ્યાર્થીઓ અને ફ્રેશર્સ માટે",
+          quickProfile: "ઝડપી પ્રોફાઇલ",
+          fillDetails: "સારાંશ જોવા માટે વિગતો ભરો અથવા લૉગિન કરો.",
+          voiceLanguage: "વૉઇસ ભાષા",
+          selectVoiceLang: "વૉઇસ ભાષા પસંદ કરો",
+          latestUpdates: "નવીનતમ અપડેટ્સ",
+          news1:
+            "₹99,446 કરોડની ફાળવણી સાથે 3.5 કરોડ નવી નોકરીઓ માટે રોજગાર-જોડાયેલ પ્રોત્સાહન.",
+          news2: "શિષ્યવૃત્તિ અને તાલીમ ખર્ચની ભરપાઈ કરતી કેન્દ્રીય યોજના.",
+          news3: "પ્રમાણપત્રો સાથે મફત ઑનલાઇન કૌશલ્ય અભ્યાસક્રમો.",
+          readMore: "વધુ વાંચો →",
+          officialPortals: "સત્તાવાર પોર્ટલ્સ",
+          scholarships: "શિષ્યવૃત્તિ",
+          needHelp: "મદદ જોઈએ છે?",
+          helpDesc:
+            "અમારો AI સહાયક યોગ્ય સરકારી યોજનાઓ શોધવામાં તમને મદદ કરી શકે છે.",
+          askNow: "હવે પૂછો",
+          footer: "ભારતીય નાગરિકો માટે ❤️ સાથે બનાવ્યું",
+          keyboardShortcuts: "કીબોર્ડ શૉર્ટકટ્સ",
+          toggleVoice: "વૉઇસ ટૉગલ કરો",
+          submitQuery: "ક્વેરી સબમિટ કરો",
+          playResponseShort: "પ્રતિસાદ ચલાવો",
+          toggleTheme: "થીમ ટૉગલ કરો",
+          closeModal: "મોડલ બંધ કરો",
+          close: "બંધ કરો",
+          welcomeMsg: "સ્વાગત છે",
+          listeningMsg: "🎤 તમારી ક્વેરી સાંભળી રહ્યું છે...",
+          readyMsg:
+            "🎉 સરકારી યોજના સહાયક તૈયાર છે! શરૂ કરવા માટે બોલો અથવા ટાઇપ કરો.",
+          planningMsg: "🧭 તમારી ક્વેરીનું આયોજન કરી રહ્યું છે...",
+          searchingMsg: "🔍 જ્ઞાન આધાર શોધી રહ્યું છે...",
+          matchingMsg: "⚙️ લાયક યોજનાઓનો મેળ કરી રહ્યું છે...",
+          responseReadyMsg: "✅ પ્રતિસાદ તૈયાર!",
+          playingMsg: "🔊 પ્રતિસાદ ચલાવી રહ્યું છે...",
+          voiceErrorMsg: "❌ વૉઇસ ઓળખ ભૂલ:",
+          voiceNotAvailable: "❌ વૉઇસ ઓળખ ઉપલબ્ધ નથી. Chrome બ્રાઉઝર વાપરો.",
+          audioDownloaded: "ઑડિઓ સફળતાપૂર્વક ડાઉનલોડ થયું!",
+          noProfileData: "નિકાસ કરવા માટે કોઈ પ્રોફાઇલ ડેટા નથી.",
+          profileExported: "પ્રોફાઇલ નિકાસ થયું!",
+          voiceNotSupported:
+            "આ બ્રાઉઝરમાં વૉઇસ ઓળખ સપોર્ટેડ નથી. કૃપા કરી Chrome વાપરો.",
+          applyNow: "હવે અરજી કરો →",
+          introResponse:
+            'નમસ્તે! હું ભારતીય સરકારી યોજનાઓ માટે તમારો AI સહાયક છું.\n\nકૃપા કરી તમારા વિશે જણાવો:\n• તમારું નામ\n• ઉંમર\n• શિક્ષણ (10મું / 12મું / સ્નાતક / B.Tech / M.Tech)\n• વ્યવસાય (ખેડૂત / વિદ્યાર્થી / એન્જિનિયર / મજૂર / વ્યવસાય)\n• રાજ્ય\n• કેટેગરી (BPL / SC / ST લાગુ પડે તો)\n\nઉદાહરણ: "મારું નામ રાહુલ છે, ઉંમર 25, હરિયાણાથી B.Tech વિદ્યાર્થી"',
+          relatedInfo: "📚 સંબંધિત માહિતી:",
+          moreDetails: "કોઈ યોજના વિશે વધુ વિગતો જોઈએ છે?",
+        },
+        kn: {
+          appTitle: "ಸರ್ಕಾರಿ ಯೋಜನೆ ಸಹಾಯಕ",
+          appSubtitle: "AI-ಚಾಲಿತ ವಾಯ್ಸ್ ಏಜೆಂಟ್",
+          startAssistant: "ಸಹಾಯಕನನ್ನು ಪ್ರಾರಂಭಿಸಿ",
+          stopAssistant: "ಸಹಾಯಕನನ್ನು ನಿಲ್ಲಿಸಿ",
+          readyMsg:
+            "🎉 ಸರ್ಕಾರಿ ಯೋಜನೆ ಸಹಾಯಕ ಸಿದ್ಧವಾಗಿದೆ! ಪ್ರಾರಂಭಿಸಲು ಮಾತನಾಡಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ.",
+          listeningMsg: "🎤 ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳುತ್ತಿದೆ...",
+        },
+        ml: {
+          appTitle: "സർക്കാർ പദ്ധതി സഹായി",
+          appSubtitle: "AI-പ്രവർത്തിത വോയ്സ് ഏജന്റ്",
+          startAssistant: "സഹായിയെ ആരംഭിക്കുക",
+          stopAssistant: "സഹായിയെ നിർത്തുക",
+          readyMsg:
+            "🎉 സർക്കാർ പദ്ധതി സഹായി തയ്യാറാണ്! ആരംഭിക്കാൻ സംസാരിക്കുക അല്ലെങ്കിൽ ടൈപ്പ് ചെയ്യുക.",
+          listeningMsg: "🎤 നിങ്ങളുടെ ചോദ്യം കേൾക്കുന്നു...",
+        },
+        pa: {
+          appTitle: "ਸਰਕਾਰੀ ਯੋਜਨਾ ਸਹਾਇਕ",
+          appSubtitle: "AI-ਸੰਚਾਲਿਤ ਵੌਇਸ ਏਜੰਟ",
+          startAssistant: "ਸਹਾਇਕ ਸ਼ੁਰੂ ਕਰੋ",
+          stopAssistant: "ਸਹਾਇਕ ਬੰਦ ਕਰੋ",
+          readyMsg:
+            "🎉 ਸਰਕਾਰੀ ਯੋਜਨਾ ਸਹਾਇਕ ਤਿਆਰ ਹੈ! ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਬੋਲੋ ਜਾਂ ਟਾਈਪ ਕਰੋ।",
+          listeningMsg: "🎤 ਤੁਹਾਡੀ ਪੁੱਛਗਿੱਛ ਸੁਣ ਰਿਹਾ ਹੈ...",
+        },
+      };
+
+      // ============ GLOBAL STATE ============
+      let isSchemeAgentActive = false;
+      let schemeRecognition,
+        schemeMediaRecorder,
+        schemeAudioChunks = [];
+      let currentUserProfile = {};
+      let conversationHistory = [];
+      let responseAudioBlob = null;
+      let userMicBlob = null;
+      let currentVoiceLang = "hi-IN";
+      let currentUILang = "en";
+      let isDarkMode = false;
+
+      // ============ INITIALIZATION ============
+      window.onload = () => {
+        initParticles();
+        initWaveform();
+        checkDarkModePreference();
+        applyUILanguage(currentUILang);
+        showStatus(t("readyMsg"), "success");
+        updateStateMachine("idle");
+
+        if (
+          !("SpeechRecognition" in window) &&
+          !("webkitSpeechRecognition" in window)
+        ) {
+          showToast(t("voiceNotSupported"), "warning");
+        }
+      };
+
+      // Translation helper
+      function t(key) {
+        return (
+          translations[currentUILang]?.[key] || translations["en"]?.[key] || key
+        );
+      }
+
+      // ============ UI LANGUAGE SWITCHING ============
+      function toggleLangDropdown() {
+        const dropdown = document.getElementById("langDropdown");
+        dropdown.classList.toggle("open");
+      }
+
+      function changeUILanguage(lang) {
+        currentUILang = lang;
+        applyUILanguage(lang);
+        toggleLangDropdown();
+
+        // Update active state
+        document.querySelectorAll(".lang-option").forEach((opt) => {
+          opt.classList.remove("active");
+          if (opt.dataset.lang === lang) {
+            opt.classList.add("active");
+          }
+        });
+
+        showToast(t("welcomeMsg") + "! " + t("appTitle"), "success");
+      }
+
+      function applyUILanguage(lang) {
+        // Update all elements with data-i18n attribute
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[lang]?.[key] || translations["en"]?.[key]) {
+            el.textContent = t(key);
+          }
+        });
+
+        // Update placeholders
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+          const key = el.getAttribute("data-i18n-placeholder");
+          if (translations[lang]?.[key] || translations["en"]?.[key]) {
+            el.placeholder = t(key);
+          }
+        });
+
+        // Update response placeholder
+        const responseEl = document.getElementById("agentResponse");
+        if (responseEl) {
+          responseEl.setAttribute("data-placeholder", t("responsePlaceholder"));
+        }
+
+        // Update HTML lang attribute
+        document.documentElement.lang = lang;
+      }
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", (e) => {
+        const dropdown = document.getElementById("langDropdown");
+        const btn = e.target.closest(".lang-icon-btn");
+        if (!btn && dropdown.classList.contains("open")) {
+          dropdown.classList.remove("open");
+        }
+      });
+
+      // ============ PARTICLES BACKGROUND ============
+      function initParticles() {
+        const container = document.getElementById("particles");
+        for (let i = 0; i < 30; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 20 + "s";
+          particle.style.animationDuration = 15 + Math.random() * 10 + "s";
+          container.appendChild(particle);
+        }
+      }
+
+      // ============ WAVEFORM ============
+      function initWaveform() {
+        const waveform = document.getElementById("waveform");
+        for (let i = 0; i < 40; i++) {
+          const bar = document.createElement("div");
+          bar.className = "waveform-bar";
+          waveform.appendChild(bar);
+        }
+      }
+
+      // ============ THEME ============
+      function checkDarkModePreference() {
+        if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          enableDarkMode();
+        }
+      }
+
+      function toggleTheme() {
+        if (isDarkMode) {
+          disableDarkMode();
+        } else {
+          enableDarkMode();
+        }
+      }
+
+      function enableDarkMode() {
+        document.body.classList.add("dark-mode");
+        document.getElementById("themeIcon").textContent = "☀️";
+        isDarkMode = true;
+      }
+
+      function disableDarkMode() {
+        document.body.classList.remove("dark-mode");
+        document.getElementById("themeIcon").textContent = "🌙";
+        isDarkMode = false;
+      }
+
+      // ============ TOAST NOTIFICATIONS ============
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toastContainer");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+
+        const icons = { info: "ℹ️", success: "✅", warning: "⚠️", error: "❌" };
+        toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || icons.info}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+      }
+
+      // ============ STATE MACHINE VISUALIZATION ============
+      function updateStateMachine(state) {
+        const steps = ["idle", "plan", "retrieve", "execute", "eval"];
+        const currentIndex = steps.indexOf(state);
+
+        steps.forEach((s, i) => {
+          const el = document.getElementById("step-" + s);
+          el.classList.remove("active", "completed");
+          if (i < currentIndex) el.classList.add("completed");
+          if (i === currentIndex) el.classList.add("active");
+        });
+      }
+
+      // ============ STATUS ============
+      function showStatus(message, type) {
+        const st = document.getElementById("agentStatus");
+        const typeClass = {
+          success: "status-success",
+          listening: "status-listening",
+          error: "status-error",
+          processing: "status-processing",
+        };
+
+        st.innerHTML = `
+                <div class="status-badge ${typeClass[type] || "status-success"}">
+                    <span class="status-dot"></span>
+                    ${message}
+                </div>
+            `;
+      }
+
+      // ============ LOGIN ============
+      function applyLogin() {
+        const name = document.getElementById("loginName").value.trim();
+        const status = document.getElementById("loginStatus");
+        if (!name) {
+          status.textContent = "";
+          return;
+        }
+        currentUserProfile.name = name;
+        status.textContent = t("welcomeMsg") + ", " + name + "!";
+        showUserProfile(currentUserProfile);
+        showToast(`${t("welcomeMsg")}, ${name}!`, "success");
+      }
+
+      // ============ VOICE RECOGNITION ============
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SR) {
+        schemeRecognition = new SR();
+        schemeRecognition.lang = currentVoiceLang;
+        schemeRecognition.continuous = true;
+        schemeRecognition.interimResults = false;
+
+        schemeRecognition.onstart = () => {
+          showStatus(t("listeningMsg"), "listening");
+          const btn = document.getElementById("recordBtn");
+          btn.innerHTML =
+            "<span>⏹️</span> <span>" + t("stopAssistant") + "</span>";
+          btn.classList.add("btn-recording");
+          btn.classList.remove("btn-primary");
+          btn.classList.add("btn-danger");
+          document.getElementById("waveform").classList.add("active");
+          startSchemeRecording();
+        };
+
+        schemeRecognition.onend = () => {
+          stopSchemeRecording();
+          isSchemeAgentActive = false;
+          const btn = document.getElementById("recordBtn");
+          btn.innerHTML =
+            "<span>🎙️</span> <span>" + t("startAssistant") + "</span>";
+          btn.classList.remove("btn-recording", "btn-danger");
+          btn.classList.add("btn-primary");
+          document.getElementById("waveform").classList.remove("active");
+        };
+
+        schemeRecognition.onresult = (e) => {
+          const text = Array.from(e.results)
+            .map((r) => r[0].transcript)
+            .join("");
+          document.getElementById("userInput").value = text;
+          processUserQuery(text);
+        };
+
+        // Add to voice recognition:
+        schemeRecognition.onerror = (e) => {
+          const errors = {
+            "no-speech": "No voice detected. Speak louder!",
+            network: "Poor connection. Check internet.",
+            "not-allowed": "Mic blocked. Check permissions.",
+          };
+          showStatus(errors[e.error] || "Voice error", "error");
+        };
+      }
+
+      // Media recorder for mic audio
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          schemeMediaRecorder = new MediaRecorder(stream);
+          schemeMediaRecorder.ondataavailable = (e) =>
+            schemeAudioChunks.push(e.data);
+          schemeMediaRecorder.onstop = () => {
+            if (schemeAudioChunks.length) {
+              userMicBlob = new Blob(schemeAudioChunks, { type: "audio/webm" });
+              const url = URL.createObjectURL(userMicBlob);
+              document.getElementById("userMicAudio").src = url;
+              document.getElementById("userMicAudioBox").style.display =
+                "block";
+              schemeAudioChunks = [];
+            }
+          };
+        })
+        .catch(() => {
+          console.log("Microphone access denied");
+        });
+
+      function startSchemeRecording() {
+        if (schemeMediaRecorder && schemeMediaRecorder.state === "inactive") {
+          schemeAudioChunks = [];
+          schemeMediaRecorder.start();
+        }
+      }
+
+      function stopSchemeRecording() {
+        if (schemeMediaRecorder && schemeMediaRecorder.state === "recording") {
+          schemeMediaRecorder.stop();
+        }
+      }
+
+      function clearUserMicAudio() {
+        userMicBlob = null;
+        document.getElementById("userMicAudio").src = "";
+        document.getElementById("userMicAudioBox").style.display = "none";
+      }
+
+      function toggleVoiceAgent() {
+        if (!schemeRecognition) {
+          showStatus(t("voiceNotAvailable"), "error");
+          return;
+        }
+        if (!isSchemeAgentActive) {
+          schemeRecognition.lang = currentVoiceLang;
+          isSchemeAgentActive = true;
+          schemeRecognition.start();
+        } else {
+          schemeRecognition.stop();
+        }
+      }
+
+      // ============ VOICE LANGUAGE ============
+      function onVoiceLanguageChange(code) {
+        currentVoiceLang = code;
+        document.getElementById("currentLangChip").textContent = "🎤 " + code;
+        if (schemeRecognition) {
+          schemeRecognition.lang = code;
+        }
+        showToast("Voice language: " + code, "success");
+      }
+
+      // ============ MAIN QUERY PROCESSING ============
+      async function processUserQuery(query) {
+        if (!query.trim()) return;
+
+        conversationHistory.push({ role: "user", content: query });
+
+        updateStateMachine("plan");
+        showStatus(t("planningMsg"), "processing");
+        await sleep(300);
+
+        updateStateMachine("retrieve");
+        showStatus(t("searchingMsg"), "processing");
+        await sleep(300);
+
+        const profile = extractUserProfile(query, conversationHistory);
+        currentUserProfile = { ...currentUserProfile, ...profile };
+
+        updateStateMachine("execute");
+        showStatus(t("matchingMsg"), "processing");
+        await sleep(300);
+
+        const schemes = getRelevantSchemes(currentUserProfile);
+        const retrievedDocs = simpleRetrieve(query);
+        const retrievedContext = buildRetrievedContext(retrievedDocs);
+
+        const resp = generateAgentResponse(
+          query,
+          schemes,
+          currentUserProfile,
+          retrievedContext,
+        );
+
+        updateStateMachine("eval");
+        showStatus(t("responseReadyMsg"), "success");
+
+        displayAgentResponse(resp);
+        showRecommendedSchemes(schemes);
+        showUserProfile(currentUserProfile);
+
+        await createResponseAudio(resp);
+
+        document.getElementById("speakResponseBtn").disabled = false;
+        document.getElementById("downloadResponseBtn").disabled = false;
+      }
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      // ============ PROFILE EXTRACTION ============
+      const stateMap = {
+        "andhra pradesh": "Andhra Pradesh",
+        "आंध्र प्रदेश": "Andhra Pradesh",
+        assam: "Assam",
+        असम: "Assam",
+        bihar: "Bihar",
+        बिहार: "Bihar",
+        chhattisgarh: "Chhattisgarh",
+        छत्तीसगढ़: "Chhattisgarh",
+        goa: "Goa",
+        gujarat: "Gujarat",
+        गुजरात: "Gujarat",
+        haryana: "Haryana",
+        हरियाणा: "Haryana",
+        "himachal pradesh": "Himachal Pradesh",
+        jharkhand: "Jharkhand",
+        karnataka: "Karnataka",
+        kerala: "Kerala",
+        "madhya pradesh": "Madhya Pradesh",
+        maharashtra: "Maharashtra",
+        odisha: "Odisha",
+        ओडिशा: "Odisha",
+        punjab: "Punjab",
+        rajasthan: "Rajasthan",
+        "tamil nadu": "Tamil Nadu",
+        तमिलनाडु: "Tamil Nadu",
+        telangana: "Telangana",
+        "uttar pradesh": "Uttar Pradesh",
+        "उत्तर प्रदेश": "Uttar Pradesh",
+        uttarakhand: "Uttarakhand",
+        "west bengal": "West Bengal",
+        "पश्चिम बंगाल": "West Bengal",
+        delhi: "Delhi",
+        "new delhi": "Delhi",
+        दिल्ली: "Delhi",
+      };
+
+      function extractUserProfile(query, history) {
+        const profile = {};
+        const text = (
+          query +
+          " " +
+          history.map((h) => h.content).join(" ")
+        ).toLowerCase();
+
+        const nameMatch = query.match(
+          /(?:name is|my name is|i am|मेरा नाम)\s*[:\-]?\s*([a-zA-Z\u0900-\u097F]+)/i,
+        );
+        if (nameMatch) profile.name = nameMatch[1];
+
+        const ageMatch =
+          text.match(/(?:age|years old|sal|साल|उम्र)[:\s]*(\d{1,2})/i) ||
+          text.match(/(\d{1,2})\s*(?:years|sal|साल)/i);
+        if (ageMatch) profile.age = parseInt(ageMatch[1]);
+
+        const occChecks = [
+          ["farmer", ["किसान", "farmer", "खेती"]],
+          ["labour", ["मजदूर", "labour", "worker"]],
+          ["student", ["छात्र", "student"]],
+          ["engineer", ["engineer", "b.tech", "btech", "m.tech"]],
+          ["doctor", ["doctor", "mbbs", "physician"]],
+          ["teacher", ["teacher", "शिक्षक", "professor"]],
+          ["driver", ["driver", "ड्राइवर"]],
+          ["business", ["business", "व्यवसायी", "shopkeeper"]],
+        ];
+
+        for (const [label, keys] of occChecks) {
+          if (keys.some((k) => text.includes(k))) {
+            profile.occupation = label;
+            break;
+          }
+        }
+
+        for (const [key, val] of Object.entries(stateMap)) {
+          if (text.includes(key)) {
+            profile.state = val;
+            break;
+          }
+        }
+
+        if (/\b(?:bpl|बीपीएल)\b/.test(text)) profile.category = "BPL";
+        if (/\b(?:sc|scheduled caste|अनुसूचित जाति)\b/.test(text))
+          profile.category = "SC";
+        if (/\b(?:st|scheduled tribe|अनुसूचित जनजाति)\b/.test(text))
+          profile.category = "ST";
+        if (/\b(?:obc|other backward class|अन्य पिछड़ा वर्ग)\b/.test(text))
+          profile.category = "OBC";
+        if (/\b(?:general|ur|unreserved|सामान्य)\b/.test(text))
+          profile.category = "General";
+
+        if (/\b(?:b\.?tech)\b/.test(text)) profile.education = "B.Tech";
+        else if (/\b(?:m\.?tech)\b/.test(text)) profile.education = "M.Tech";
+        else if (/\b(?:12th|intermediate|twelfth|बारहवीं)\b/.test(text))
+          profile.education = "12th";
+        else if (/\b(?:10th|matric|tenth|दसवीं)\b/.test(text))
+          profile.education = "10th";
+        else if (/\b(?:graduate|bachelor|स्नातक)\b/.test(text))
+          profile.education = "Graduate";
+
+        return profile;
+      }
+
+      // ============ RETRIEVAL ============
+      const retrievalDocs = [
+        {
+          id: "pmkisan",
+          title: "PM Kisan Samman Nidhi",
+          text: "PM Kisan provides ₹6000 per year directly to farmers with cultivable land.",
+        },
+        {
+          id: "pmfby",
+          title: "PM Fasal Bima",
+          text: "Crop insurance against natural calamities with subsidised premium.",
+        },
+        {
+          id: "nsp",
+          title: "National Scholarship Portal",
+          text: "Central scholarships for students from class 1 to PhD.",
+        },
+        {
+          id: "eshram",
+          title: "e-Shram Portal",
+          text: "Social security registration for unorganised workers.",
+        },
+        {
+          id: "pmjay",
+          title: "Ayushman Bharat PMJAY",
+          text: "Free health coverage up to ₹5 lakh for poor families.",
+        },
+        {
+          id: "pmay",
+          title: "PM Awas Yojana",
+          text: "Housing subsidy for poor families in rural and urban areas.",
+        },
+      ];
+
+      function simpleRetrieve(query, topK = 3) {
+        const q = query.toLowerCase();
+        const tokens = q.split(/\W+/).filter((t) => t.length > 2);
+        if (!tokens.length) return [];
+
+        const scored = retrievalDocs.map((doc) => {
+          let score = 0;
+          const text = (doc.title + " " + doc.text).toLowerCase();
+          tokens.forEach((tok) => {
+            if (text.includes(tok)) score += 1;
+          });
+          return { doc, score };
+        });
+
+        return scored
+          .filter((s) => s.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, topK)
+          .map((s) => s.doc);
+      }
+
+      function buildRetrievedContext(docs) {
+        if (!docs.length) return "";
+        return docs.map((d, i) => `${i + 1}. ${d.title}: ${d.text}`).join("\n");
+      }
+
+      // ============ SCHEME DATABASE ============
+      function getRelevantSchemes(profile) {
+        const db = {
+          farmer: [
+            {
+              name: "PM Kisan Samman Nidhi",
+              desc: "₹6000 annual income support to small farmers.",
+              eligibility: "Farmer families with cultivable land.",
+              link: "pmkisan.gov.in",
+            },
+            {
+              name: "PM Fasal Bima Yojana",
+              desc: "Crop insurance for yield losses.",
+              eligibility: "Farmers growing notified crops.",
+              link: "pmfby.gov.in",
+            },
+          ],
+          student: [
+            {
+              name: "National Scholarship Portal",
+              desc: "Multiple central and state scholarships.",
+              eligibility: "Students class 1 to PhD.",
+              link: "scholarships.gov.in",
+            },
+            {
+              name: "Central Sector Scholarship",
+              desc: "Merit-based scholarship for college students.",
+              eligibility: "Top 12th pass students.",
+              link: "scholarships.gov.in",
+            },
+          ],
+          labour: [
+            {
+              name: "e-Shram Portal",
+              desc: "Social security for unorganised workers.",
+              eligibility: "Workers 16-59 years with Aadhaar.",
+              link: "eshram.gov.in",
+            },
+            {
+              name: "PM-SVANidhi",
+              desc: "Working capital loan for street vendors.",
+              eligibility: "Street vendors in urban areas.",
+              link: "pmsvanidhi.mohua.gov.in",
+            },
+          ],
+          general: [
+            {
+              name: "Ayushman Bharat - PMJAY",
+              desc: "Health cover up to ₹5 lakh per family.",
+              eligibility: "Poor families in SECC data.",
+              link: "pmjay.gov.in",
+            },
+            {
+              name: "PM Awas Yojana",
+              desc: "Support for pucca house construction.",
+              eligibility: "Eligible rural and urban poor.",
+              link: "pmaymis.gov.in",
+            },
+          ],
+          engineer: [
+            {
+              name: "AICTE Pragati/Saksham",
+              desc: "Scholarships for engineering students.",
+              eligibility: "Students in AICTE-approved institutions.",
+              link: "aicte-india.org",
+            },
+            {
+              name: "Skill India Apprenticeship",
+              desc: "Skill development for graduates.",
+              eligibility: "Engineering diploma/degree holders.",
+              link: "skillindiadigital.gov.in",
+            },
+          ],
+        };
+
+        let res = [...db.general];
+
+        if (profile.occupation === "farmer") res = res.concat(db.farmer);
+        if (
+          profile.occupation === "student" ||
+          profile.occupation === "engineer"
+        )
+          res = res.concat(db.student);
+        if (["labour", "driver", "construction"].includes(profile.occupation))
+          res = res.concat(db.labour);
+        if (profile.education === "B.Tech" || profile.education === "M.Tech")
+          res = res.concat(db.engineer);
+
+        return res.slice(0, 6);
+      }
+
+      // ============ RESPONSE GENERATION ============
+      function generateAgentResponse(
+        query,
+        schemes,
+        profile,
+        retrievedContext,
+      ) {
+        if (!Object.keys(profile).length) {
+          return t("introResponse");
+        }
+
+        let r = `${t("welcomeMsg")} ${profile.name || ""}!\n\n`;
+        r += `Based on your profile (${profile.age ? profile.age + " years, " : ""}${profile.education || ""} ${profile.occupation || ""}, ${profile.state || ""}):\n\n`;
+
+        schemes.slice(0, 5).forEach((s, i) => {
+          r += `${i + 1}. ${s.name}\n   • ${s.desc}\n   • Eligibility: ${s.eligibility}\n   • Apply: ${s.link}\n\n`;
+        });
+
+        if (retrievedContext) {
+          r += `\n${t("relatedInfo")}\n${retrievedContext}\n`;
+        }
+
+        r += `\n${t("moreDetails")}`;
+        return r;
+      }
+
+      function displayAgentResponse(text) {
+        document.getElementById("agentResponse").innerHTML = text.replace(
+          /\n/g,
+          "<br>",
+        );
+      }
+
+      function showRecommendedSchemes(schemes) {
+        const sec = document.getElementById("schemesSection");
+        const cont = document.getElementById("recommendedSchemes");
+        if (!schemes.length) {
+          sec.style.display = "none";
+          return;
+        }
+
+        let h = "";
+        schemes.forEach((s) => {
+          h += `<div class="scheme-card">
+                    <h4 class="scheme-name">${s.name}</h4>
+                    <p class="scheme-desc">${s.desc}</p>
+                    <p class="scheme-eligibility">✓ ${s.eligibility}</p>
+                    <button class="btn btn-primary scheme-btn" onclick="window.open('https://${s.link}','_blank')">${t("applyNow")}</button>
+                </div>`;
+        });
+        cont.innerHTML = h;
+        sec.style.display = "block";
+      }
+
+      function showUserProfile(profile) {
+        const sec = document.getElementById("profileSection");
+        const cont = document.getElementById("userProfile");
+        const side = document.getElementById("sidebarProfile");
+
+        if (!Object.keys(profile).length) {
+          sec.style.display = "none";
+          side.innerHTML =
+            '<p style="font-size: 13px; color: var(--text-muted);">' +
+            t("fillDetails") +
+            "</p>";
+          return;
+        }
+
+        let h = '<div class="profile-summary">';
+        if (profile.name)
+          h += `<div class="profile-name">${profile.name}</div>`;
+        h += '<div class="profile-details">';
+        if (profile.age)
+          h += `<span class="profile-tag">Age: ${profile.age}</span>`;
+        if (profile.education)
+          h += `<span class="profile-tag">${profile.education}</span>`;
+        if (profile.occupation)
+          h += `<span class="profile-tag">${profile.occupation}</span>`;
+        if (profile.state)
+          h += `<span class="profile-tag">${profile.state}</span>`;
+        if (profile.category)
+          h += `<span class="profile-tag">${profile.category}</span>`;
+        h += "</div></div>";
+
+        cont.innerHTML = h;
+        sec.style.display = "block";
+
+        let s = "";
+        if (profile.name)
+          s += `<strong style="font-size: 14px;">${profile.name}</strong><br>`;
+        if (profile.age) s += `Age: ${profile.age}<br>`;
+        if (profile.education) s += `${profile.education}<br>`;
+        if (profile.occupation) s += `${profile.occupation}<br>`;
+        if (profile.state) s += `${profile.state}`;
+        side.innerHTML = `<div style="font-size: 13px; color: var(--text-secondary);">${s}</div>`;
+      }
+
+      // ============ AUDIO ============
+      async function createResponseAudio(text) {
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const dest = ac.createMediaStreamDestination();
+        const rec = new MediaRecorder(dest.stream);
+        const chunks = [];
+
+        rec.ondataavailable = (e) => chunks.push(e.data);
+        rec.onstop = () => {
+          responseAudioBlob = new Blob(chunks, { type: "audio/webm" });
+          const url = URL.createObjectURL(responseAudioBlob);
+          document.getElementById("responseAudio").src = url;
+          document.getElementById("responseAudioBox").style.display = "block";
+        };
+
+        const utt = new SpeechSynthesisUtterance(text);
+        utt.lang = currentVoiceLang;
+        utt.rate = 0.9;
+        utt.pitch = 1.05;
+
+        utt.onstart = () => rec.start();
+        utt.onend = () => rec.stop();
+        speechSynthesis.speak(utt);
+      }
+
+      function speakCurrentResponse() {
+        const audio = document.getElementById("responseAudio");
+        if (audio && audio.src) {
+          audio.play();
+          showStatus(t("playingMsg"), "listening");
+        }
+      }
+
+      function downloadResponseAudio() {
+        if (!responseAudioBlob) return;
+        const url = URL.createObjectURL(responseAudioBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "scheme-response.webm";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(t("audioDownloaded"), "success");
+      }
+
+      function downloadProfile() {
+        if (!Object.keys(currentUserProfile).length) {
+          showToast(t("noProfileData"), "warning");
+          return;
+        }
+        const text = Object.entries(currentUserProfile)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join("\n");
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "my-profile.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(t("profileExported"), "success");
+      }
+
+      // ============ UTILITIES ============
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function openShortcuts() {
+        document.getElementById("shortcutsModal").classList.add("open");
+      }
+
+      function closeShortcuts() {
+        document.getElementById("shortcutsModal").classList.remove("open");
+      }
+
+      // ============ KEYBOARD SHORTCUTS ============
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeShortcuts();
+        }
+
+        if (
+          e.key === "Enter" &&
+          !e.shiftKey &&
+          document.activeElement.id === "userInput"
+        ) {
+          e.preventDefault();
+          processUserQuery(document.getElementById("userInput").value);
+        }
+
+        if (e.ctrlKey && e.key === "d") {
+          e.preventDefault();
+          toggleTheme();
+        }
+
+        if (e.ctrlKey && e.key === "p") {
+          e.preventDefault();
+          speakCurrentResponse();
+        }
+
+        if (
+          e.code === "Space" &&
+          document.activeElement.tagName !== "INPUT" &&
+          document.activeElement.tagName !== "TEXTAREA"
+        ) {
+          e.preventDefault();
+          toggleVoiceAgent();
+        }
+      });
+
+      document
+        .getElementById("shortcutsModal")
+        .addEventListener("click", (e) => {
+          if (e.target.id === "shortcutsModal") closeShortcuts();
+        });
+    </script>
+  </body>
+</html>
